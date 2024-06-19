@@ -1,5 +1,3 @@
-// index.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
@@ -21,7 +19,9 @@ const db = getDatabase(app);
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
 
-// Fetch data from Firebase and display in the table
+let selectedRows = [];
+
+// Function to fetch data from Firebase and display in the table
 export function fetchData() {
     const equipmentRef = ref(db, 'equipment/');
     onValue(equipmentRef, (snapshot) => {
@@ -38,7 +38,37 @@ export function fetchData() {
             
             equipmentTableBody.appendChild(row);
         });
+        addRowEventListeners();
     });
+}
+
+// Function to add event listeners to table rows for selection
+function addRowEventListeners() {
+    const rows = equipmentTableBody.getElementsByTagName('tr');
+    
+    for (const row of rows) {
+        row.addEventListener('click', function() {
+            if (selectedRows.includes(row)) {
+                row.classList.remove('selected');
+                selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
+            } else {
+                row.classList.add('selected');
+                selectedRows.push(row);
+            }
+
+            // Remove all .selected-first classes
+            document.querySelectorAll(".selected-first").forEach(row => {
+                row.classList.remove("selected-first");
+                row.classList.add("selected");
+            });
+
+            // Add .selected-first to the first selected row, if any
+            if (selectedRows.length > 0) {
+                selectedRows[0].classList.remove("selected");
+                selectedRows[0].classList.add("selected-first");
+            }
+        });
+    }
 }
 
 // Filter table based on search input
