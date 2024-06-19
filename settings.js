@@ -16,6 +16,25 @@ function getConfigFromForm() {
     };
 }
 
+// Function to set the form fields from the configuration
+function setFormFromConfig(config) {
+    document.getElementById('apiKey').value = config.apiKey || '';
+    document.getElementById('authDomain').value = config.authDomain || '';
+    document.getElementById('databaseURL').value = config.databaseURL || '';
+    document.getElementById('projectId').value = config.projectId || '';
+    document.getElementById('storageBucket').value = config.storageBucket || '';
+    document.getElementById('messagingSenderId').value = config.messagingSenderId || '';
+    document.getElementById('appId').value = config.appId || '';
+}
+
+// Load the configuration from localStorage when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const config = JSON.parse(localStorage.getItem('firebaseConfig'));
+    if (config) {
+        setFormFromConfig(config);
+    }
+});
+
 // Event listener for form submission to save settings
 document.getElementById('settingsForm').addEventListener('submit', (e) => {
     e.preventDefault();
