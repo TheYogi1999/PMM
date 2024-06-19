@@ -80,8 +80,12 @@ table tbody tr:hover {
     cursor: pointer;
 }
 
+.selected-first {
+    background-color: #ffd700; /* Dark yellow for the first selected row */
+}
+
 .selected {
-    background-color: #d3d3d3; /* Highlight color for selected rows */
+    background-color: #ffffe0; /* Light yellow for the other selected rows */
 }
 
 /* Responsive design */
