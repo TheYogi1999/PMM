@@ -37,7 +37,23 @@ document.getElementById('addEquipmentForm').addEventListener('submit', (e) => {
         modelNo: document.getElementById('modelNo').value,
         manufacturer: document.getElementById('manufacturer').value,
         sapNo: document.getElementById('sapNo').value,
-        // Add additional form fields here
+        customsNo: document.getElementById('customsNo').value,
+        origin: document.getElementById('origin').value,
+        batteryType: document.getElementById('batteryType').value,
+        weight: document.getElementById('weight').value,
+        imageLink: document.getElementById('imageLink').value,
+        calibratedOn: document.getElementById('calibratedOn').value,
+        cycleDuration: document.getElementById('cycleDuration').value,
+        calibrationDueOn: document.getElementById('calibrationDueOn').value,
+        handoverDate: document.getElementById('handoverDate').value,
+        handoverTo: document.getElementById('handoverTo').value,
+        location: document.getElementById('location').value,
+        returnDate: document.getElementById('returnDate').value,
+        warehouse: document.getElementById('warehouse').value,
+        storageLocation: document.getElementById('storageLocation').value,
+        calibrationStatus: document.getElementById('calibrationStatus').value,
+        utilizationStatus: document.getElementById('utilizationStatus').value,
+        comment: document.getElementById('comment').value,
     };
 
     const newEquipmentRef = push(ref(db, 'equipment/'));
