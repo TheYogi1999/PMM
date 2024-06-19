@@ -33,7 +33,7 @@ const columnOrder = [
 let selectedRows = [];
 
 // Fetch data from Firebase and display in the table
-export function fetchData() {
+function fetchData() {
     const equipmentRef = ref(db, 'equipment/');
     onValue(equipmentRef, (snapshot) => {
         equipmentTableBody.innerHTML = '';
@@ -113,26 +113,32 @@ searchField.addEventListener('input', () => {
 });
 
 document.getElementById('addEquipmentBtn').addEventListener('click', () => {
+    alert('Add Equipment button clicked');
     // Logik für das Hinzufügen von Equipment
 });
 
 document.getElementById('checkOutBtn').addEventListener('click', () => {
+    alert('Check Out button clicked');
     // Logik für das Auschecken von Equipment
 });
 
 document.getElementById('calibrationBtn').addEventListener('click', () => {
+    alert('Calibration button clicked');
     // Logik für die Kalibrierung
 });
 
 document.getElementById('overviewMapBtn').addEventListener('click', () => {
+    alert('Overview Map button clicked');
     // Logik für die Übersichtskarte
 });
 
 document.getElementById('logBtn').addEventListener('click', () => {
+    alert('Log button clicked');
     // Logik für das Protokoll
 });
 
 document.getElementById('settingsBtn').addEventListener('click', () => {
+    alert('Settings button clicked');
     // Logik für die Einstellungen
 });
 
