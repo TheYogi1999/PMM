@@ -9,138 +9,98 @@ function getFirebaseConfig() {
     if (config) {
         return JSON.parse(config);
     } else {
-        throw new Error('Firebase config not found');
+        console.error('Firebase config not found');
+        alert('Firebase configuration is missing. Please set it in the settings.');
+        return null;
     }
 }
 
 // Initialize Firebase
 const firebaseConfig = getFirebaseConfig();
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+if (firebaseConfig) {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-const equipmentTableBody = document.getElementById('equipmentTableBody');
-const searchField = document.getElementById('searchField');
-const editEquipmentBtn = document.getElementById('editEquipmentBtn');
+    const equipmentTableBody = document.getElementById('equipmentTableBody');
+    const searchField = document.getElementById('searchField');
 
-// Define the order of the columns
-const columnOrder = [
-    'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 'sapNo', 'customsNo', 
-    'origin', 'batteryType', 'weight', 'imageLink', 'calibratedOn', 'cycleDuration', 
-    'calibrationDueOn', 'handoverDate', 'handoverTo', 'location', 'returnDate', 
-    'warehouse', 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
-];
+    // Define the order of the columns
+    const columnOrder = [
+        'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 'sapNo', 'customsNo', 
+        'origin', 'batteryType', 'weight', 'imageLink', 'calibratedOn', 'cycleDuration', 
+        'calibrationDueOn', 'handoverDate', 'handoverTo', 'location', 'returnDate', 
+        'warehouse', 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+    ];
 
-let selectedRows = [];
+    // Fetch data from Firebase and display in the table
+    function fetchData() {
+        const equipmentRef = ref(db, 'equipment/');
+        onValue(equipmentRef, (snapshot) => {
+            equipmentTableBody.innerHTML = '';
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                const row = document.createElement('tr');
+                row.dataset.id = childSnapshot.key;
 
-// Fetch data from Firebase and display in the table
-function fetchData() {
-    const equipmentRef = ref(db, 'equipment/');
-    onValue(equipmentRef, (snapshot) => {
-        equipmentTableBody.innerHTML = '';
-        snapshot.forEach((childSnapshot) => {
-            const data = childSnapshot.val();
-            const row = document.createElement('tr');
-            row.dataset.id = childSnapshot.key;
-            
-            columnOrder.forEach((col) => {
-                const cell = document.createElement('td');
-                cell.textContent = data[col] || '';
-                row.appendChild(cell);
+                columnOrder.forEach((col) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = data[col] || '';
+                    row.appendChild(cell);
+                });
+
+                equipmentTableBody.appendChild(row);
             });
-            
-            // Add click event to the row
-            row.addEventListener('click', () => {
-                if (row.classList.contains('selected') || row.classList.contains('selected-first')) {
-                    row.classList.remove('selected');
-                    row.classList.remove('selected-first');
-                    selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
-                } else {
-                    selectedRows.push(row);
-                    updateRowClasses();
-                }
-            });
-
-            equipmentTableBody.appendChild(row);
         });
-    });
-}
-
-function updateRowClasses() {
-    selectedRows.forEach((row, index) => {
-        if (index === 0) {
-            row.classList.add('selected-first');
-            row.classList.remove('selected');
-        } else {
-            row.classList.add('selected');
-            row.classList.remove('selected-first');
-        }
-    });
-}
-
-// Redirect to editEquipment.html with selected equipment
-editEquipmentBtn.addEventListener('click', () => {
-    const selectedEquipment = selectedRows.map(row => {
-        const data = {};
-        columnOrder.forEach((col, index) => {
-            data[col] = row.children[index].textContent;
-        });
-        data.id = row.dataset.id;
-        return data;
-    });
-
-    sessionStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
-    window.location.href = 'editEquipment.html';
-});
-
-// Filter table based on search input
-searchField.addEventListener('input', () => {
-    const filter = searchField.value.toLowerCase();
-    const rows = equipmentTableBody.getElementsByTagName('tr');
-    
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        let match = false;
-        
-        for (let j = 0; j < cells.length; j++) {
-            if (cells[j].textContent.toLowerCase().includes(filter)) {
-                match = true;
-                break;
-            }
-        }
-        
-        rows[i].style.display = match ? '' : 'none';
     }
-});
 
-document.getElementById('addEquipmentBtn').addEventListener('click', () => {
-    alert('Add Equipment button clicked');
-    // Logik für das Hinzufügen von Equipment
-});
+    // Filter table based on search input
+    searchField.addEventListener('input', () => {
+        const filter = searchField.value.toLowerCase();
+        const rows = equipmentTableBody.getElementsByTagName('tr');
 
-document.getElementById('checkOutBtn').addEventListener('click', () => {
-    alert('Check Out button clicked');
-    // Logik für das Auschecken von Equipment
-});
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let match = false;
 
-document.getElementById('calibrationBtn').addEventListener('click', () => {
-    alert('Calibration button clicked');
-    // Logik für die Kalibrierung
-});
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(filter)) {
+                    match = true;
+                    break;
+                }
+            }
 
-document.getElementById('overviewMapBtn').addEventListener('click', () => {
-    alert('Overview Map button clicked');
-    // Logik für die Übersichtskarte
-});
+            rows[i].style.display = match ? '' : 'none';
+        }
+    });
 
-document.getElementById('logBtn').addEventListener('click', () => {
-    alert('Log button clicked');
-    // Logik für das Protokoll
-});
+    document.getElementById('addEquipmentBtn').addEventListener('click', () => {
+        window.location.href = 'addEquipment.html';
+    });
 
-document.getElementById('settingsBtn').addEventListener('click', () => {
-    alert('Settings button clicked');
-    // Logik für die Einstellungen
-});
+    document.getElementById('editEquipmentBtn').addEventListener('click', () => {
+        window.location.href = 'editEquipment.html';
+    });
 
-// Call fetchData to load the equipment data when the page loads
-fetchData();
+    document.getElementById('checkOutBtn').addEventListener('click', () => {
+        window.location.href = 'checkOut.html';
+    });
+
+    document.getElementById('calibrationBtn').addEventListener('click', () => {
+        window.location.href = 'calibration.html';
+    });
+
+    document.getElementById('overviewMapBtn').addEventListener('click', () => {
+        window.location.href = 'overviewMap.html';
+    });
+
+    document.getElementById('logBtn').addEventListener('click', () => {
+        window.location.href = 'log.html';
+    });
+
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        window.location.href = 'settings.html';
+    });
+
+    // Call fetchData to load the equipment data when the page loads
+    fetchData();
+}
