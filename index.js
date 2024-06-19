@@ -21,6 +21,14 @@ const db = getDatabase(app);
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
 
+// Define the order of the columns
+const columnOrder = [
+    'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 'sapNo', 'customsNo', 
+    'origin', 'batteryType', 'weight', 'imageLink', 'calibratedOn', 'cycleDuration', 
+    'calibrationDueOn', 'handoverDate', 'handoverTo', 'location', 'returnDate', 
+    'warehouse', 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+];
+
 // Fetch data from Firebase and display in the table
 export function fetchData() {
     const equipmentRef = ref(db, 'equipment/');
@@ -30,11 +38,11 @@ export function fetchData() {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
             
-            for (const key in data) {
+            columnOrder.forEach((col) => {
                 const cell = document.createElement('td');
-                cell.textContent = data[key];
+                cell.textContent = data[col] || '';
                 row.appendChild(cell);
-            }
+            });
             
             equipmentTableBody.appendChild(row);
         });
@@ -60,6 +68,3 @@ searchField.addEventListener('input', () => {
         rows[i].style.display = match ? '' : 'none';
     }
 });
-
-// Initial data fetch
-fetchData();
