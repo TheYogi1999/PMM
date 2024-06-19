@@ -1,7 +1,22 @@
 // addEquipment.js
 
-import { db } from './firebase-config.js';
-import { ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+// Function to get the configuration from localStorage
+function getFirebaseConfig() {
+    const config = localStorage.getItem('firebaseConfig');
+    if (config) {
+        return JSON.parse(config);
+    } else {
+        throw new Error('Firebase config not found');
+    }
+}
+
+// Initialize Firebase
+const firebaseConfig = getFirebaseConfig();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 document.getElementById('addEquipmentForm').addEventListener('submit', (e) => {
     e.preventDefault();
