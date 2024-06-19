@@ -7,7 +7,53 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
     <header>
+        <h1>Settings</h1>
+    </header>
+    <main>
+        <form id="settingsForm">
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" name="apiKey" required><br><br>
+
+            <label for="authDomain">Auth Domain:</label>
+            <input type="text" id="authDomain" name="authDomain" required><br><br>
+
+            <label for="databaseURL">Database URL:</label>
+            <input type="text" id="databaseURL" name="databaseURL" required><br><br>
+
+            <label for="projectId">Project ID:</label>
+            <input type="text" id="projectId" name="projectId" required><br><br>
+
+            <label for="storageBucket">Storage Bucket:</label>
+            <input type="text" id="storageBucket" name="storageBucket" required><br><br>
+
+            <label for="messagingSenderId">Messaging Sender ID:</label>
+            <input type="text" id="messagingSenderId" name="messagingSenderId" required><br><br>
+
+            <label for="appId">App ID:</label>
+            <input type="text" id="appId" name="appId" required><br><br>
+
+            <button type="submit">Save</button>
+        </form>
+        <button id="testConnectionBtn">Test Connection</button>
+        <div id="testResult"></div>
+    </main>
+    <footer>
+        <button onclick="window.history.back()">Go Back</button>
+    </footer>
+    <script type="module" src="settings.js"></script>
+</body>
+</html>
+
         <h1>Settings</h1>
     </header>
     <main>
