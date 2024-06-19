@@ -1,6 +1,5 @@
 // settings.js
 
-// Import necessary Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
