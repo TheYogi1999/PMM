@@ -1,5 +1,7 @@
 // colorScript.js
 
+import { fetchData } from './index.js';
+
 function applyColors() {
     const rows = document.getElementById('equipmentTableBody').getElementsByTagName('tr');
     
