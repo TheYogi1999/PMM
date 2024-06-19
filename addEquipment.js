@@ -14,9 +14,18 @@ function getFirebaseConfig() {
 }
 
 // Initialize Firebase
-const firebaseConfig = getFirebaseConfig();
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+let app;
+let db;
+
+try {
+    const firebaseConfig = getFirebaseConfig();
+    app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+} catch (error) {
+    console.error('Error initializing Firebase: ', error);
+    document.getElementById('testResult').textContent = 'Error initializing Firebase: ' + error.message;
+    document.getElementById('testResult').style.color = 'red';
+}
 
 document.getElementById('addEquipmentForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -40,4 +49,28 @@ document.getElementById('addEquipmentForm').addEventListener('submit', (e) => {
         .catch((error) => {
             console.error('Error adding equipment: ', error);
         });
+});
+
+// Event listener for the test connection button
+document.getElementById('testConnectionBtn').addEventListener('click', () => {
+    const resultElement = document.getElementById('testResult');
+
+    try {
+        // Reference to a test location in the database
+        const testRef = ref(db, 'testConnection');
+
+        // Set a test value in the database
+        set(testRef, { test: 'success' })
+            .then(() => {
+                resultElement.textContent = 'Connection successful!';
+                resultElement.style.color = 'green';
+            })
+            .catch((error) => {
+                resultElement.textContent = `Connection failed: ${error.message}`;
+                resultElement.style.color = 'red';
+            });
+    } catch (error) {
+        resultElement.textContent = `Invalid configuration: ${error.message}`;
+        resultElement.style.color = 'red';
+    }
 });
