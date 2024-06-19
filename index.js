@@ -111,3 +111,27 @@ searchField.addEventListener('input', () => {
         rows[i].style.display = match ? '' : 'none';
     }
 });
+
+document.getElementById('addEquipmentBtn').addEventListener('click', () => {
+    // Logik für das Hinzufügen von Equipment
+});
+
+document.getElementById('checkOutBtn').addEventListener('click', () => {
+    // Logik für das Auschecken von Equipment
+});
+
+document.getElementById('calibrationBtn').addEventListener('click', () => {
+    // Logik für die Kalibrierung
+});
+
+document.getElementById('overviewMapBtn').addEventListener('click', () => {
+    // Logik für die Übersichtskarte
+});
+
+document.getElementById('logBtn').addEventListener('click', () => {
+    // Logik für das Protokoll
+});
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+    // Logik für die Einstellungen
+});
