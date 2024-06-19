@@ -44,6 +44,11 @@ export function fetchData() {
                 row.appendChild(cell);
             });
             
+            // Add click event to the row
+            row.addEventListener('click', () => {
+                row.classList.toggle('selected');
+            });
+
             equipmentTableBody.appendChild(row);
         });
     });
