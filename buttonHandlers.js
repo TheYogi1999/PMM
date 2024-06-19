@@ -1,5 +1,3 @@
-// buttonHandlers.js
-
 document.getElementById('addEquipmentBtn').addEventListener('click', () => {
     window.location.href = 'addEquipment.html';
 });
