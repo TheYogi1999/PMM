@@ -71,9 +71,12 @@ table th {
     color: white;
 }
 
+table tbody tr {
+    cursor: pointer;
+}
+
 table tbody tr:hover {
     background-color: #ddd;
-    cursor: pointer;
 }
 
 .selected-first {
