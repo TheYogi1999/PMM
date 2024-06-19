@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Equipment</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Add Equipment</h1>
+    </header>
+    <main>
+        <form id="addEquipmentForm">
+            <label for="equipmentNo">Equipment no.:</label>
+            <input type="text" id="equipmentNo" name="equipmentNo" required><br><br>
+
+            <label for="serialNo">Serial No.:</label>
+            <input type="text" id="serialNo" name="serialNo" required><br><br>
+            
+            <label for="equipmentType">Equipment Type:</label>
+            <input type="text" id="equipmentType" name="equipmentType" required><br><br>
+
+            <label for="modelNo">Model No.:</label>
+            <input type="text" id="modelNo" name="modelNo" required><br><br>
+
+            <label for="manufacturer">Manufacturer:</label>
+            <input type="text" id="manufacturer" name="manufacturer" required><br><br>
+
+            <label for="sapNo">SAP No:</label>
+            <input type="text" id="sapNo" name="sapNo" required><br><br>
+
+            <!-- Add additional fields as necessary -->
+
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <footer>
+        <button onclick="window.history.back()">Go Back</button>
+    </footer>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script src="addEquipment.js"></script>
+</body>
+</html>

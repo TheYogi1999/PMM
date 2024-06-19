@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messmittelverwaltung</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Messmittelverwaltung</h1>
+        <div class="controls">
+            <button id="addEquipmentBtn">Add Equipment</button>
+            <button id="editEquipmentBtn">Edit Equipment</button>
+            <button id="checkOutBtn">Check out</button>
+            <button id="calibrationBtn">Calibration</button>
+            <button id="overviewMapBtn">Overview map</button>
+            <button id="logBtn">Log</button>
+            <button id="settingsBtn">Settings</button>
+        </div>
+    </header>
+    <main>
+        <input type="text" id="searchField" placeholder="Search...">
+        <table id="equipmentTable">
+            <thead>
+                <tr>
+                    <th>Equipment no.</th>
+                    <th>Serial No.</th>
+                    <th>Equipment Type</th>
+                    <th>Model No.</th>
+                    <th>Manufacturer</th>
+                    <th>SAP No</th>
+                    <th>Customs No.</th>
+                    <th>Origin</th>
+                    <th>Battery type</th>
+                    <th>Weight (Kg)</th>
+                    <th>Image link</th>
+                    <th>Calibrated on</th>
+                    <th>Cycle duration</th>
+                    <th>Calibration due on</th>
+                    <th>Handover date</th>
+                    <th>Handover to</th>
+                    <th>Location</th>
+                    <th>Return date</th>
+                    <th>Warehouse</th>
+                    <th>Storage location</th>
+                    <th>Calibration status</th>
+                    <th>Utilization status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody id="equipmentTableBody">
+                <!-- Dynamically filled with JavaScript -->
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <div id="selectedEquipmentDetails">
+            <!-- Details of selected equipment will appear here -->
+        </div>
+        <img id="selectedEquipmentImage" src="" alt="Equipment Image">
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script src="script.js" type="module"></script>
+    <script src="colorScript.js" type="module"></script>
+    <script src="buttonHandlers.js" type="module"></script>
+</body>
+</html>
