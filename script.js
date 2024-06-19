@@ -46,5 +46,19 @@ searchField.addEventListener('input', () => {
     }
 });
 
+// Ensure the document is fully loaded before running the script
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Get selected equipment from sessionStorage
+    const selectedEquipment = JSON.parse(sessionStorage.getItem('selectedEquipment')) || [];
+
+    // Display selected equipment
+    const equipmentListDiv = document.getElementById('equipmentList');
+    selectedEquipment.forEach(equipment => {
+        const equipmentDiv = document.createElement('div');
+        equipmentDiv.textContent = equipment.name; // assuming equipment has a name property
+        equipmentListDiv.appendChild(equipmentDiv);
+    });
+});
+
 // Initial data fetch
 fetchData();
