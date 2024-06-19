@@ -135,3 +135,6 @@ document.getElementById('logBtn').addEventListener('click', () => {
 document.getElementById('settingsBtn').addEventListener('click', () => {
     // Logik für die Einstellungen
 });
+
+// Call fetchData to load the equipment data when the page loads
+fetchData();
