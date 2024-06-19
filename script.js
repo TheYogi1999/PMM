@@ -1,13 +1,36 @@
-// script.js
+// index.js
 
-import { db } from './firebase-config.js';
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+// Function to get the configuration from localStorage
+function getFirebaseConfig() {
+    const config = localStorage.getItem('firebaseConfig');
+    if (config) {
+        return JSON.parse(config);
+    } else {
+        throw new Error('Firebase config not found');
+    }
+}
+
+// Initialize Firebase
+const firebaseConfig = getFirebaseConfig();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
 
+// Define the order of the columns
+const columnOrder = [
+    'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 'sapNo', 'customsNo', 
+    'origin', 'batteryType', 'weight', 'imageLink', 'calibratedOn', 'cycleDuration', 
+    'calibrationDueOn', 'handoverDate', 'handoverTo', 'location', 'returnDate', 
+    'warehouse', 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+];
+
 // Fetch data from Firebase and display in the table
-function fetchData() {
+export function fetchData() {
     const equipmentRef = ref(db, 'equipment/');
     onValue(equipmentRef, (snapshot) => {
         equipmentTableBody.innerHTML = '';
@@ -15,11 +38,11 @@ function fetchData() {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
             
-            for (const key in data) {
+            columnOrder.forEach((col) => {
                 const cell = document.createElement('td');
-                cell.textContent = data[key];
+                cell.textContent = data[col] || '';
                 row.appendChild(cell);
-            }
+            });
             
             equipmentTableBody.appendChild(row);
         });
@@ -45,6 +68,3 @@ searchField.addEventListener('input', () => {
         rows[i].style.display = match ? '' : 'none';
     }
 });
-
-// Initial data fetch
-fetchData();
