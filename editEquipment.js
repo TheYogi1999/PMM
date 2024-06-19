@@ -27,29 +27,19 @@ const selectedEquipment = JSON.parse(sessionStorage.getItem('selectedEquipment')
 // Display selected equipment
 selectedEquipment.forEach(equipment => {
     const equipmentDiv = document.createElement('div');
-    equipmentDiv.textContent = `Equipment No: ${equipment.equipmentNo}, Serial No: ${equipment.serialNo}`;
+    equipmentDiv.textContent = equipment.name; // assuming equipment has a name property
     selectedEquipmentDiv.appendChild(equipmentDiv);
 });
 
-// Save changes to Firebase
-editForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const updates = {};
-    selectedEquipment.forEach(equipment => {
-        const equipmentRef = ref(db, `equipment/${equipment.id}`);
-        
-        // Only include fields that have been changed
-        const formData = new FormData(editForm);
-        formData.forEach((value, key) => {
-            if (value) {
-                updates[key] = value;
-            }
-        });
-        
-        update(equipmentRef, updates);
-    });
-    
-    alert('Changes saved successfully!');
+// Save selected equipment to sessionStorage when clicking 'Edit Equipment'
+document.getElementById('editEquipmentButton').addEventListener('click', () => {
+    const equipment = {
+        // gather equipment data from the form
+        name: document.getElementById('equipmentName').value
+        // add other properties as needed
+    };
+    selectedEquipment.push(equipment);
+    sessionStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    // Redirect to main Equipment page
+    window.location.href = 'equipment.html';
 });
-s
