@@ -3,35 +3,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
-// Function to get the configuration from the form
-function getConfigFromForm() {
-    return {
-        apiKey: document.getElementById('apiKey').value,
-        authDomain: document.getElementById('authDomain').value,
-        databaseURL: document.getElementById('databaseURL').value,
-        projectId: document.getElementById('projectId').value,
-        storageBucket: document.getElementById('storageBucket').value,
-        messagingSenderId: document.getElementById('messagingSenderId').value,
-        appId: document.getElementById('appId').value,
-    };
-}
-
-// Function to set the form fields from the configuration
-function setFormFromConfig(config) {
-    document.getElementById('apiKey').value = config.apiKey || '';
-    document.getElementById('authDomain').value = config.authDomain || '';
-    document.getElementById('databaseURL').value = config.databaseURL || '';
-    document.getElementById('projectId').value = config.projectId || '';
-    document.getElementById('storageBucket').value = config.storageBucket || '';
-    document.getElementById('messagingSenderId').value = config.messagingSenderId || '';
-    document.getElementById('appId').value = config.appId || '';
-}
-
 // Load the configuration from localStorage when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    const config = JSON.parse(localStorage.getItem('firebaseConfig'));
+    const config = localStorage.getItem('firebaseConfig');
     if (config) {
-        setFormFromConfig(config);
+        document.getElementById('firebaseConfig').value = config;
     }
 });
 
@@ -39,20 +15,26 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('settingsForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const config = getConfigFromForm();
-    localStorage.setItem('firebaseConfig', JSON.stringify(config));
-    alert('Settings saved');
-    window.location.href = 'index.html';
+    const config = document.getElementById('firebaseConfig').value;
+    try {
+        JSON.parse(config); // Validate JSON
+        localStorage.setItem('firebaseConfig', config);
+        alert('Settings saved');
+        window.location.href = 'index.html';
+    } catch (error) {
+        alert('Invalid JSON format. Please correct the configuration.');
+    }
 });
 
 // Event listener for the test connection button
 document.getElementById('testConnectionBtn').addEventListener('click', () => {
-    const config = getConfigFromForm();
+    const config = document.getElementById('firebaseConfig').value;
     const resultElement = document.getElementById('testResult');
 
     try {
+        const parsedConfig = JSON.parse(config); // Parse JSON
         // Initialize Firebase app with the provided config
-        const app = initializeApp(config);
+        const app = initializeApp(parsedConfig);
         const db = getDatabase(app);
 
         // Reference to a test location in the database
