@@ -29,6 +29,8 @@ const columnOrder = [
     'warehouse', 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
 ];
 
+let selectedRows = [];
+
 // Fetch data from Firebase and display in the table
 export function fetchData() {
     const equipmentRef = ref(db, 'equipment/');
@@ -46,11 +48,30 @@ export function fetchData() {
             
             // Add click event to the row
             row.addEventListener('click', () => {
-                row.classList.toggle('selected');
+                if (row.classList.contains('selected') || row.classList.contains('selected-first')) {
+                    row.classList.remove('selected');
+                    row.classList.remove('selected-first');
+                    selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
+                } else {
+                    selectedRows.push(row);
+                    updateRowClasses();
+                }
             });
 
             equipmentTableBody.appendChild(row);
         });
+    });
+}
+
+function updateRowClasses() {
+    selectedRows.forEach((row, index) => {
+        if (index === 0) {
+            row.classList.add('selected-first');
+            row.classList.remove('selected');
+        } else {
+            row.classList.add('selected');
+            row.classList.remove('selected-first');
+        }
     });
 }
 
