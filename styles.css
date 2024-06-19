@@ -1,30 +1,44 @@
 /* styles.css */
-body {
-    font-family: Arial, sans-serif;
+
+/* Basic reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
 header {
-    background-color: #f4f4f4;
-    padding: 20px;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
     text-align: center;
 }
 
-.controls {
-    margin: 20px 0;
+header h1 {
+    margin-bottom: 10px;
 }
 
-.controls button {
-    margin: 0 5px;
-    padding: 10px 20px;
+header .controls {
+    margin-bottom: 10px;
+}
+
+header .controls button {
     background-color: #007bff;
     color: white;
     border: none;
+    padding: 10px 15px;
+    margin: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.controls button:hover {
+header .controls button:hover {
     background-color: #0056b3;
 }
 
@@ -36,46 +50,57 @@ main {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-thead {
-    background-color: #f4f4f4;
-}
-
-th, td {
+table th, table td {
+    padding: 12px;
     border: 1px solid #ddd;
-    padding: 8px;
     text-align: left;
 }
 
-tr:nth-child(even) {
-    background-color: #f9f9f9;
+table th {
+    background-color: #007bff;
+    color: white;
 }
 
-tr:hover {
-    background-color: #f1f1f1;
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
-footer {
-    background-color: #f4f4f4;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
+table tbody tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
 }
 
-#selectedEquipmentDetails {
-    flex: 1;
-    margin-right: 20px;
+.selected {
+    background-color: #d3d3d3; /* Highlight color for selected rows */
 }
 
-#selectedEquipmentImage {
-    max-width: 200px;
-    max-height: 200px;
-}
+/* Responsive design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+    }
 
+    header .controls button {
+        padding: 8px 10px;
+        margin: 3px;
+        font-size: 14px;
+    }
+
+    #searchField {
+        padding: 8px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+}
