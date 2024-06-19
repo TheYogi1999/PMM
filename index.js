@@ -20,6 +20,7 @@ const db = getDatabase(app);
 
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
+const editEquipmentBtn = document.getElementById('editEquipmentBtn');
 
 // Define the order of the columns
 const columnOrder = [
@@ -39,6 +40,7 @@ export function fetchData() {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
+            row.dataset.id = childSnapshot.key;
             
             columnOrder.forEach((col) => {
                 const cell = document.createElement('td');
@@ -74,6 +76,21 @@ function updateRowClasses() {
         }
     });
 }
+
+// Redirect to editEquipment.html with selected equipment
+editEquipmentBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => {
+        const data = {};
+        columnOrder.forEach((col, index) => {
+            data[col] = row.children[index].textContent;
+        });
+        data.id = row.dataset.id;
+        return data;
+    });
+
+    sessionStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'editEquipment.html';
+});
 
 // Filter table based on search input
 searchField.addEventListener('input', () => {
