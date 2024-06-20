@@ -55,18 +55,6 @@ function addRowEventListeners() {
                 row.classList.add('selected');
                 selectedRows.push(row);
             }
-
-            // Remove all .selected-first classes
-            document.querySelectorAll(".selected-first").forEach(row => {
-                row.classList.remove("selected-first");
-                row.classList.add("selected");
-            });
-
-            // Add .selected-first to the first selected row, if any
-            if (selectedRows.length > 0) {
-                selectedRows[0].classList.remove("selected");
-                selectedRows[0].classList.add("selected-first");
-            }
         });
     }
 }
