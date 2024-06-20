@@ -30,11 +30,20 @@ export function fetchData() {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
             
-            for (const key in data) {
+            // Assuming the data object has the same keys as the table headers
+            const attributes = [
+                'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
+                'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
+                'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
+                'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+            ];
+
+            attributes.forEach(attr => {
                 const cell = document.createElement('td');
-                cell.textContent = data[key];
+                cell.textContent = data[attr] || ''; // Fallback to empty string if the attribute is missing
                 row.appendChild(cell);
-            }
+            });
             
             equipmentTableBody.appendChild(row);
         });
