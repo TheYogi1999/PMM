@@ -1,160 +1,109 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calibrate Equipment</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Calibrate Equipment</h1>
-    </header>
-    <main>
-        <form id="calibrationForm">
-            <fieldset>
-                <legend>Handover Information</legend>
-                <label for="handoverTo">Handover to:</label>
-                <input type="text" id="handoverTo" name="handoverTo" required><br>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
-                <label for="handoverDate">Handover date:</label>
-                <input type="date" id="handoverDate" name="handoverDate" required><br>
+// Function to get the configuration from localStorage
+function getFirebaseConfig() {
+    const config = localStorage.getItem('firebaseConfig');
+    if (config) {
+        return JSON.parse(config);
+    } else {
+        throw new Error('Firebase config not found');
+    }
+}
 
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required><br>
+// Initialize Firebase
+const firebaseConfig = getFirebaseConfig();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-                <label for="returnDate">Return date:</label>
-                <input type="date" id="returnDate" name="returnDate"><br>
+const equipmentTableBody = document.getElementById('equipmentTableBody');
+const searchField = document.getElementById('searchField');
+const editEquipmentBtn = document.getElementById('editEquipmentBtn');
+const checkOutBtn = document.getElementById('checkOutBtn');
+const calibrateBtn = document.getElementById('calibrateBtn');
 
-                <label for="utilizationStatus">Utilization status:</label>
-                <input type="text" id="utilizationStatus" name="utilizationStatus" required><br>
-            </fieldset>
+let selectedRows = [];
 
-            <fieldset>
-                <legend>Calibration Information</legend>
-                <label for="calibratedOn">Calibrated on:</label>
-                <input type="date" id="calibratedOn" name="calibratedOn" required><br>
-
-                <label for="cycleDuration">Cycle duration:</label>
-                <input type="text" id="cycleDuration" name="cycleDuration" required><br>
-
-                <label for="calibrationDueOn">Calibration due on:</label>
-                <input type="date" id="calibrationDueOn" name="calibrationDueOn" required><br>
-            </fieldset>
-
-            <button type="submit">Submit Changes</button>
-        </form>
-        <table id="selectedEquipmentTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Equipment no.</th>
-                    <th>Serial No.</th>
-                    <th>Equipment Type</th>
-                    <th>Model No.</th>
-                    <th>Manufacturer</th>
-                    <th>SAP No</th>
-                    <th>Customs No.</th>
-                    <th>Origin</th>
-                    <th>Battery type</th>
-                    <th>Weight (Kg)</th>
-                    <th>Image link</th>
-                    <th>Calibrated on</th>
-                    <th>Cycle duration</th>
-                    <th>Calibration due on</th>
-                    <th>Handover date</th>
-                    <th>Handover to</th>
-                    <th>Location</th>
-                    <th>Return date</th>
-                    <th>Warehouse</th>
-                    <th>Storage location</th>
-                    <th>Calibration status</th>
-                    <th>Utilization status</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody id="selectedEquipmentTableBody">
-                <!-- Dynamically filled with JavaScript -->
-            </tbody>
-        </table>
-    </main>
-    <footer>
-        <button onclick="window.history.back()">Go Back</button>
-    </footer>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
-
-        const firebaseConfig = getFirebaseConfig();
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
-        const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
-
-        selectedEquipment.forEach(equipment => {
+// Function to fetch data from Firebase and display in the table
+export function fetchData() {
+    const equipmentRef = ref(db, 'equipment/');
+    onValue(equipmentRef, (snapshot) => {
+        equipmentTableBody.innerHTML = '';
+        snapshot.forEach((childSnapshot) => {
+            const data = childSnapshot.val();
             const row = document.createElement('tr');
+            
+            // Including the ID in the data object
+            data.id = childSnapshot.key;
 
             const attributes = [
-                'id', 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
                 'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
                 'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
                 'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
                 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
             ];
 
+            row.dataset.equipment = JSON.stringify(data);
+
             attributes.forEach(attr => {
                 const cell = document.createElement('td');
-                cell.textContent = equipment[attr] || '';
+                cell.textContent = data[attr] || ''; // Fallback to empty string if the attribute is missing
                 row.appendChild(cell);
             });
 
-            row.dataset.id = equipment.id; // Store the equipment ID in the row dataset
-            selectedEquipmentTableBody.appendChild(row);
-        });
-
-        document.getElementById('calibrationForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const data = {};
-            formData.forEach((value, key) => {
-                if (value) {
-                    data[key] = value;
+            row.addEventListener('click', function() {
+                if (selectedRows.includes(row)) {
+                    row.classList.remove('selected');
+                    selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
+                } else {
+                    row.classList.add('selected');
+                    selectedRows.push(row);
                 }
             });
 
-            if (Object.keys(data).length === 0) {
-                alert('No changes detected.');
-                return;
-            }
-
-            try {
-                const updates = {};
-                selectedEquipment.forEach(equipment => {
-                    const equipmentId = equipment.id;
-                    const equipmentRef = ref(db, 'equipment/' + equipmentId);
-                    const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
-                    updates['equipment/' + equipmentId] = updatedData;
-                });
-
-                await update(ref(db), updates);
-                alert('Equipment calibrated successfully');
-                window.location.href = 'index.html'; // Redirect back to the main page
-            } catch (error) {
-                console.error('Error calibrating equipment:', error);
-                alert('Failed to calibrate equipment. Please try again.');
-            }
+            equipmentTableBody.appendChild(row);
         });
+    });
+}
 
-        function getFirebaseConfig() {
-            const config = localStorage.getItem('firebaseConfig');
-            if (config) {
-                return JSON.parse(config);
-            } else {
-                throw new Error('Firebase config not found');
+editEquipmentBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
+    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'editEquipment.html';
+});
+
+checkOutBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
+    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'checkOut.html';
+});
+
+calibrateBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
+    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'calibration.html';
+});
+
+// Filter table based on search input
+searchField.addEventListener('input', () => {
+    const filter = searchField.value.toLowerCase();
+    const rows = equipmentTableBody.getElementsByTagName('tr');
+    
+    for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let match = false;
+        
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j].textContent.toLowerCase().includes(filter)) {
+                match = true;
+                break;
             }
         }
-    </script>
-</body>
-</html>
+        
+        rows[i].style.display = match ? '' : 'none';
+    }
+});
+
+// Initial data fetch
+fetchData();
