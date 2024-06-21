@@ -3,20 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log</title>
+    <title>Log Entries</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Log</h1>
+        <h1>Log Entries</h1>
     </header>
     <main>
-        <ul id="logList">
-            <!-- List of activities will be dynamically filled -->
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Equipment ID</th>
+                    <th>Changes</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody">
+                <!-- Dynamically filled with JavaScript -->
+            </tbody>
+        </table>
     </main>
     <footer>
         <button onclick="window.history.back()">Go Back</button>
     </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+        const firebaseConfig = getFirebaseConfig();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const logTableBody = document.getElementById('logTableBody');
+
+        const logRef = ref(db, 'logs/');
+        onValue(logRef, (snapshot) => {
+            logTableBody.innerHTML = '';
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                const row = document.createElement('tr');
+
+                const timestampCell = document.createElement('td');
+                timestampCell.textContent = data.timestamp;
+                row.appendChild(timestampCell);
+
+                const equipmentIdCell = document.createElement('td');
+                equipmentIdCell.textContent = data.equipmentId;
+                row.appendChild(equipmentIdCell);
+
+                const changesCell = document.createElement('td');
+                changesCell.textContent = JSON.stringify(data.changes);
+                row.appendChild(changesCell);
+
+                logTableBody.appendChild(row);
+            });
+        });
+
+        function getFirebaseConfig() {
+            const config = localStorage.getItem('firebaseConfig');
+            if (config) {
+                return JSON.parse(config);
+            } else {
+                throw new Error('Firebase config not found');
+            }
+        }
+    </script>
 </body>
 </html>
