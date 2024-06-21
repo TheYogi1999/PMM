@@ -1,103 +1,48 @@
-/* Basic reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+form {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
-
-header h1 {
-    margin-bottom: 10px;
-}
-
-header .controls {
-    margin-bottom: 10px;
-}
-
-header .controls button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-header .controls button:hover {
-    background-color: #0056b3;
-}
-
-main {
-    padding: 20px;
-}
-
-#searchField {
-    width: 100%;
-    padding: 10px;
+fieldset {
     margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+legend {
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin: 5px 0;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-table th, table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-table th {
+button[type="submit"] {
     background-color: #007bff;
     color: white;
-}
-
-table tbody tr {
+    border: none;
+    padding: 10px 15px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-table tbody tr:hover {
-    background-color: #ddd;
+button[type="submit"]:hover {
+    background-color: #0056b3;
 }
 
-.selected {
-    background-color: #ffffe0; /* Hellgelb für ausgewählte Zeilen */
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 20px;
-    }
-
-    header .controls button {
-        padding: 8px 10px;
-        margin: 3px;
-        font-size: 14px;
-    }
-
-    #searchField {
-        padding: 8px;
-    }
-
-    table th, table td {
-        padding: 8px;
-    }
+img#imagePreview {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    margin-top: 10px;
 }
