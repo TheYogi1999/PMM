@@ -12,83 +12,111 @@
     </header>
     <main>
         <form id="addEquipmentForm">
-            <label for="equipmentNo">Equipment no.:</label>
-            <input type="text" id="equipmentNo" name="equipmentNo" required><br><br>
+            <fieldset>
+                <legend>Basic Information</legend>
+                <label for="equipmentNo">Equipment no.:</label>
+                <input type="text" id="equipmentNo" name="equipmentNo"><br>
 
-            <label for="serialNo">Serial No.:</label>
-            <input type="text" id="serialNo" name="serialNo" required><br><br>
+                <label for="serialNo">Serial No.:</label>
+                <input type="text" id="serialNo" name="serialNo"><br>
 
-            <label for="equipmentType">Equipment Type:</label>
-            <input type="text" id="equipmentType" name="equipmentType" required><br><br>
+                <label for="sapNo">SAP No:</label>
+                <input type="text" id="sapNo" name="sapNo"><br>
+            </fieldset>
 
-            <label for="modelNo">Model No.:</label>
-            <input type="text" id="modelNo" name="modelNo" required><br><br>
+            <fieldset>
+                <legend>Model Information</legend>
+                <label for="modelNo">Model No.:</label>
+                <input type="text" id="modelNo" name="modelNo"><br>
 
-            <label for="manufacturer">Manufacturer:</label>
-            <input type="text" id="manufacturer" name="manufacturer" required><br><br>
+                <label for="manufacturer">Manufacturer:</label>
+                <input type="text" id="manufacturer" name="manufacturer"><br>
+            </fieldset>
 
-            <label for="sapNo">SAP No:</label>
-            <input type="text" id="sapNo" name="sapNo" required><br><br>
+            <fieldset>
+                <legend>Customs Information</legend>
+                <label for="customsNo">Customs No.:</label>
+                <input type="text" id="customsNo" name="customsNo"><br>
 
-            <label for="customsNo">Customs No.:</label>
-            <input type="text" id="customsNo" name="customsNo" required><br><br>
+                <label for="origin">Origin:</label>
+                <input type="text" id="origin" name="origin"><br>
+            </fieldset>
 
-            <label for="origin">Origin:</label>
-            <input type="text" id="origin" name="origin" required><br><br>
+            <fieldset>
+                <legend>Calibration Information</legend>
+                <label for="calibratedOn">Calibrated on:</label>
+                <input type="date" id="calibratedOn" name="calibratedOn"><br>
 
-            <label for="batteryType">Battery type:</label>
-            <input type="text" id="batteryType" name="batteryType" required><br><br>
+                <label for="cycleDuration">Cycle duration:</label>
+                <input type="text" id="cycleDuration" name="cycleDuration"><br>
 
-            <label for="weight">Weight (Kg):</label>
-            <input type="number" id="weight" name="weight" step="0.01" required><br><br>
+                <label for="calibrationDueOn">Calibration due on:</label>
+                <input type="date" id="calibrationDueOn" name="calibrationDueOn"><br>
+            </fieldset>
 
-            <label for="imageLink">Image link:</label>
-            <input type="text" id="imageLink" name="imageLink"><br><br>
+            <fieldset>
+                <legend>Handover Information</legend>
+                <label for="handoverTo">Handover to:</label>
+                <input type="text" id="handoverTo" name="handoverTo"><br>
 
-            <label for="calibratedOn">Calibrated on:</label>
-            <input type="date" id="calibratedOn" name="calibratedOn" required><br><br>
+                <label for="handoverDate">Handover date:</label>
+                <input type="date" id="handoverDate" name="handoverDate"><br>
 
-            <label for="cycleDuration">Cycle duration:</label>
-            <input type="text" id="cycleDuration" name="cycleDuration" required><br><br>
+                <label for="returnDate">Return date:</label>
+                <input type="date" id="returnDate" name="returnDate"><br>
+            </fieldset>
 
-            <label for="calibrationDueOn">Calibration due on:</label>
-            <input type="date" id="calibrationDueOn" name="calibrationDueOn" required><br><br>
+            <fieldset>
+                <legend>Storage Information</legend>
+                <label for="warehouse">Warehouse:</label>
+                <input type="text" id="warehouse" name="warehouse"><br>
 
-            <label for="handoverDate">Handover date:</label>
-            <input type="date" id="handoverDate" name="handoverDate"><br><br>
+                <label for="storageLocation">Storage location:</label>
+                <input type="text" id="storageLocation" name="storageLocation"><br>
+            </fieldset>
 
-            <label for="handoverTo">Handover to:</label>
-            <input type="text" id="handoverTo" name="handoverTo"><br><br>
+            <fieldset>
+                <legend>Status Information</legend>
+                <label for="calibrationStatus">Calibration status:</label>
+                <input type="text" id="calibrationStatus" name="calibrationStatus"><br>
 
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required><br><br>
+                <label for="utilizationStatus">Utilization status:</label>
+                <input type="text" id="utilizationStatus" name="utilizationStatus"><br>
+            </fieldset>
 
-            <label for="returnDate">Return date:</label>
-            <input type="date" id="returnDate" name="returnDate"><br><br>
+            <fieldset>
+                <legend>Additional Information</legend>
+                <label for="batteryType">Battery type:</label>
+                <input type="text" id="batteryType" name="batteryType"><br>
 
-            <label for="warehouse">Warehouse:</label>
-            <input type="text" id="warehouse" name="warehouse"><br><br>
+                <label for="weight">Weight (Kg):</label>
+                <input type="text" id="weight" name="weight"><br>
 
-            <label for="storageLocation">Storage location:</label>
-            <input type="text" id="storageLocation" name="storageLocation"><br><br>
+                <label for="imageLink">Image link:</label>
+                <input type="text" id="imageLink" name="imageLink" oninput="updateImagePreview()"><br>
 
-            <label for="calibrationStatus">Calibration status:</label>
-            <input type="text" id="calibrationStatus" name="calibrationStatus" required><br><br>
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment"></textarea><br>
+            </fieldset>
 
-            <label for="utilizationStatus">Utilization status:</label>
-            <input type="text" id="utilizationStatus" name="utilizationStatus" required><br><br>
-
-            <label for="comment">Comment:</label>
-            <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br><br>
+            <fieldset>
+                <legend>Image Preview</legend>
+                <img id="imagePreview" src="" alt="Image preview will appear here" style="max-width: 100%; height: auto;">
+            </fieldset>
 
             <button type="submit">Submit</button>
         </form>
-        <button id="testConnectionBtn">Test Connection</button>
-        <div id="testResult"></div>
     </main>
     <footer>
         <button onclick="window.history.back()">Go Back</button>
     </footer>
-    <script type="module" src="addEquipment.js"></script>
+
+    <script>
+        function updateImagePreview() {
+            const imageLink = document.getElementById('imageLink').value;
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageLink;
+        }
+    </script>
 </body>
 </html>
