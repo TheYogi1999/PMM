@@ -21,6 +21,9 @@ const searchField = document.getElementById('searchField');
 const editEquipmentBtn = document.getElementById('editEquipmentBtn');
 const checkOutBtn = document.getElementById('checkOutBtn');
 const calibrateBtn = document.getElementById('calibrateBtn');
+const settingsBtn = document.getElementById('settingsBtn');
+const overviewMapBtn = document.getElementById('overviewMapBtn');
+const logBtn = document.getElementById('logBtn');
 
 let selectedRows = [];
 
@@ -83,6 +86,18 @@ calibrateBtn.addEventListener('click', () => {
     const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
     localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
     window.location.href = 'calibration.html';
+});
+
+settingsBtn.addEventListener('click', () => {
+    window.location.href = 'settings.html';
+});
+
+overviewMapBtn.addEventListener('click', () => {
+    window.location.href = 'overviewMap.html';
+});
+
+logBtn.addEventListener('click', () => {
+    window.location.href = 'log.html';
 });
 
 // Filter table based on search input
