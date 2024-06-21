@@ -192,7 +192,7 @@
                     const equipmentId = equipment.id;
                     const equipmentRef = ref(db, 'equipment/' + equipmentId);
                     const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
-                    updates[equipmentRef.key] = updatedData;
+                    updates['equipment/' + equipmentId] = updatedData;
                 });
 
                 await update(ref(db), updates);
