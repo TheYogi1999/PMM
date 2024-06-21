@@ -83,7 +83,7 @@
     </footer>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+        import { getDatabase, ref, update, push } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
         const firebaseConfig = getFirebaseConfig();
         const app = initializeApp(firebaseConfig);
@@ -131,14 +131,31 @@
 
             try {
                 const updates = {};
+                const logEntries = [];
                 selectedEquipment.forEach(equipment => {
                     const equipmentId = equipment.id;
                     const equipmentRef = ref(db, 'equipment/' + equipmentId);
                     const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
                     updates['equipment/' + equipmentId] = updatedData;
+                    
+                    // Log entry
+                    const logEntry = {
+                        timestamp: new Date().toISOString(),
+                        changes: data,
+                        equipmentId: equipmentId,
+                        action: 'Calibration'
+                    };
+                    logEntries.push(logEntry);
                 });
 
                 await update(ref(db), updates);
+                
+                // Save log entries
+                const logRef = ref(db, 'logs/');
+                logEntries.forEach(async logEntry => {
+                    await push(logRef, logEntry);
+                });
+
                 alert('Equipment calibrated successfully');
                 window.location.href = 'index.html'; // Redirect back to the main page
             } catch (error) {
