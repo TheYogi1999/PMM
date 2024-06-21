@@ -12,17 +12,134 @@
     </header>
     <main>
         <form id="checkOutForm">
-            <!-- Form fields to check out equipment -->
-            <label for="equipmentNo">Equipment no.:</label>
-            <input type="text" id="equipmentNo" name="equipmentNo"><br><br>
-            
-            <!-- Add all other form fields similarly -->
-            
-            <button type="submit">Submit</button>
+            <fieldset>
+                <legend>Handover Information</legend>
+                <label for="handoverTo">Handover to:</label>
+                <input type="text" id="handoverTo" name="handoverTo" required><br>
+
+                <label for="handoverDate">Handover date:</label>
+                <input type="date" id="handoverDate" name="handoverDate" required><br>
+
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required><br>
+
+                <label for="returnDate">Return date:</label>
+                <input type="date" id="returnDate" name="returnDate"><br>
+            </fieldset>
+
+            <button type="submit">Submit Changes</button>
         </form>
+        <table id="selectedEquipmentTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Equipment no.</th>
+                    <th>Serial No.</th>
+                    <th>Equipment Type</th>
+                    <th>Model No.</th>
+                    <th>Manufacturer</th>
+                    <th>SAP No</th>
+                    <th>Customs No.</th>
+                    <th>Origin</th>
+                    <th>Battery type</th>
+                    <th>Weight (Kg)</th>
+                    <th>Image link</th>
+                    <th>Calibrated on</th>
+                    <th>Cycle duration</th>
+                    <th>Calibration due on</th>
+                    <th>Handover date</th>
+                    <th>Handover to</th>
+                    <th>Location</th>
+                    <th>Return date</th>
+                    <th>Warehouse</th>
+                    <th>Storage location</th>
+                    <th>Calibration status</th>
+                    <th>Utilization status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody id="selectedEquipmentTableBody">
+                <!-- Dynamically filled with JavaScript -->
+            </tbody>
+        </table>
     </main>
     <footer>
         <button onclick="window.history.back()">Go Back</button>
     </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+        const firebaseConfig = getFirebaseConfig();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
+        const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
+
+        selectedEquipment.forEach(equipment => {
+            const row = document.createElement('tr');
+
+            const attributes = [
+                'id', 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
+                'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
+                'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
+                'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+            ];
+
+            attributes.forEach(attr => {
+                const cell = document.createElement('td');
+                cell.textContent = equipment[attr] || '';
+                row.appendChild(cell);
+            });
+
+            row.dataset.id = equipment.id; // Store the equipment ID in the row dataset
+            selectedEquipmentTableBody.appendChild(row);
+        });
+
+        document.getElementById('checkOutForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (value) {
+                    data[key] = value;
+                }
+            });
+
+            if (Object.keys(data).length === 0) {
+                alert('No changes detected.');
+                return;
+            }
+
+            try {
+                const updates = {};
+                selectedEquipment.forEach(equipment => {
+                    const equipmentId = equipment.id;
+                    const equipmentRef = ref(db, 'equipment/' + equipmentId);
+                    const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
+                    updates['equipment/' + equipmentId] = updatedData;
+                });
+
+                await update(ref(db), updates);
+                alert('Equipment checked out successfully');
+                window.location.href = 'index.html'; // Redirect back to the main page
+            } catch (error) {
+                console.error('Error checking out equipment:', error);
+                alert('Failed to check out equipment. Please try again.');
+            }
+        });
+
+        function getFirebaseConfig() {
+            const config = localStorage.getItem('firebaseConfig');
+            if (config) {
+                return JSON.parse(config);
+            } else {
+                throw new Error('Firebase config not found');
+            }
+        }
+    </script>
 </body>
 </html>
