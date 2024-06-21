@@ -18,6 +18,7 @@ const db = getDatabase(app);
 
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
+const editEquipmentBtn = document.getElementById('editEquipmentBtn');
 
 let selectedRows = [];
 
@@ -30,7 +31,6 @@ export function fetchData() {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
             
-            // Assuming the data object has the same keys as the table headers
             const attributes = [
                 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
                 'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
@@ -38,6 +38,8 @@ export function fetchData() {
                 'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
                 'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
             ];
+
+            row.dataset.equipment = JSON.stringify(data);
 
             attributes.forEach(attr => {
                 const cell = document.createElement('td');
@@ -68,6 +70,12 @@ function addRowEventListeners() {
     }
 }
 
+editEquipmentBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
+    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'editEquipment.html';
+});
+
 // Filter table based on search input
 searchField.addEventListener('input', () => {
     const filter = searchField.value.toLowerCase();
@@ -90,4 +98,3 @@ searchField.addEventListener('input', () => {
 
 // Initial data fetch
 fetchData();
-
