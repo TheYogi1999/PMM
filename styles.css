@@ -1,5 +1,3 @@
-/* styles.css */
-
 /* Basic reset */
 * {
     margin: 0;
@@ -79,8 +77,8 @@ table tbody tr:hover {
     background-color: #ddd;
 }
 
-.selected-first {
-    background-color: #ffd700; /* Dark yellow for the first selected row */
+.selected {
+    background-color: #ffffe0; /* Hellgelb für ausgewählte Zeilen */
 }
 
 /* Responsive design */
