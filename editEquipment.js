@@ -1,45 +1,24 @@
-// editEquipment.js
+document.addEventListener('DOMContentLoaded', () => {
+    const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
+    const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+    selectedEquipment.forEach(equipment => {
+        const row = document.createElement('tr');
 
-// Function to get the configuration from localStorage
-function getFirebaseConfig() {
-    const config = localStorage.getItem('firebaseConfig');
-    if (config) {
-        return JSON.parse(config);
-    } else {
-        throw new Error('Firebase config not found');
-    }
-}
+        const attributes = [
+            'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+            'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
+            'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
+            'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
+            'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+        ];
 
-// Initialize Firebase
-const firebaseConfig = getFirebaseConfig();
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+        attributes.forEach(attr => {
+            const cell = document.createElement('td');
+            cell.textContent = equipment[attr] || '';
+            row.appendChild(cell);
+        });
 
-const selectedEquipmentDiv = document.getElementById('selectedEquipment');
-const editForm = document.getElementById('editForm');
-
-// Get selected equipment from sessionStorage
-const selectedEquipment = JSON.parse(sessionStorage.getItem('selectedEquipment')) || [];
-
-// Display selected equipment
-selectedEquipment.forEach(equipment => {
-    const equipmentDiv = document.createElement('div');
-    equipmentDiv.textContent = equipment.name; // assuming equipment has a name property
-    selectedEquipmentDiv.appendChild(equipmentDiv);
-});
-
-// Save selected equipment to sessionStorage when clicking 'Edit Equipment'
-document.getElementById('editEquipmentButton').addEventListener('click', () => {
-    const equipment = {
-        // gather equipment data from the form
-        name: document.getElementById('equipmentName').value
-        // add other properties as needed
-    };
-    selectedEquipment.push(equipment);
-    sessionStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
-    // Redirect to main Equipment page
-    window.location.href = 'equipment.html';
+        selectedEquipmentTableBody.appendChild(row);
+    });
 });
