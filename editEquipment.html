@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Equipment</title>
+    <title>Edit Selected Equipment</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,6 +11,96 @@
         <h1>Edit Selected Equipment</h1>
     </header>
     <main>
+        <form id="editEquipmentForm">
+            <fieldset>
+                <legend>Basic Information</legend>
+                <label for="equipmentNo">Equipment no.:</label>
+                <input type="text" id="equipmentNo" name="equipmentNo"><br>
+
+                <label for="serialNo">Serial No.:</label>
+                <input type="text" id="serialNo" name="serialNo"><br>
+
+                <label for="sapNo">SAP No:</label>
+                <input type="text" id="sapNo" name="sapNo"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Model Information</legend>
+                <label for="modelNo">Model No.:</label>
+                <input type="text" id="modelNo" name="modelNo"><br>
+
+                <label for="manufacturer">Manufacturer:</label>
+                <input type="text" id="manufacturer" name="manufacturer"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Customs Information</legend>
+                <label for="customsNo">Customs No.:</label>
+                <input type="text" id="customsNo" name="customsNo"><br>
+
+                <label for="origin">Origin:</label>
+                <input type="text" id="origin" name="origin"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Calibration Information</legend>
+                <label for="calibratedOn">Calibrated on:</label>
+                <input type="date" id="calibratedOn" name="calibratedOn"><br>
+
+                <label for="cycleDuration">Cycle duration:</label>
+                <input type="text" id="cycleDuration" name="cycleDuration"><br>
+
+                <label for="calibrationDueOn">Calibration due on:</label>
+                <input type="date" id="calibrationDueOn" name="calibrationDueOn"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Handover Information</legend>
+                <label for="handoverTo">Handover to:</label>
+                <input type="text" id="handoverTo" name="handoverTo"><br>
+
+                <label for="handoverDate">Handover date:</label>
+                <input type="date" id="handoverDate" name="handoverDate"><br>
+
+                <label for="returnDate">Return date:</label>
+                <input type="date" id="returnDate" name="returnDate"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Storage Information</legend>
+                <label for="warehouse">Warehouse:</label>
+                <input type="text" id="warehouse" name="warehouse"><br>
+
+                <label for="storageLocation">Storage location:</label>
+                <input type="text" id="storageLocation" name="storageLocation"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Status Information</legend>
+                <label for="calibrationStatus">Calibration status:</label>
+                <input type="text" id="calibrationStatus" name="calibrationStatus"><br>
+
+                <label for="utilizationStatus">Utilization status:</label>
+                <input type="text" id="utilizationStatus" name="utilizationStatus"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Additional Information</legend>
+                <label for="batteryType">Battery type:</label>
+                <input type="text" id="batteryType" name="batteryType"><br>
+
+                <label for="weight">Weight (Kg):</label>
+                <input type="text" id="weight" name="weight"><br>
+
+                <label for="imageLink">Image link:</label>
+                <input type="text" id="imageLink" name="imageLink"><br>
+
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment"></textarea><br>
+            </fieldset>
+
+            <button type="submit">Submit Changes</button>
+        </form>
         <table id="selectedEquipmentTable">
             <thead>
                 <tr>
@@ -47,7 +137,78 @@
     <footer>
         <button onclick="window.history.back()">Go Back</button>
     </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
-    <script type="module" src="editEquipment.js"></script>
+        const firebaseConfig = getFirebaseConfig();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
+        const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
+
+        selectedEquipment.forEach((equipment, index) => {
+            const row = document.createElement('tr');
+
+            const attributes = [
+                'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
+                'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
+                'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
+                'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+            ];
+
+            attributes.forEach(attr => {
+                const cell = document.createElement('td');
+                cell.textContent = equipment[attr] || '';
+                row.appendChild(cell);
+            });
+
+            row.dataset.index = index;
+            selectedEquipmentTableBody.appendChild(row);
+        });
+
+        document.getElementById('editEquipmentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (value) {
+                    data[key] = value;
+                }
+            });
+
+            if (Object.keys(data).length === 0) {
+                alert('No changes detected.');
+                return;
+            }
+
+            try {
+                const updates = {};
+                selectedEquipment.forEach(equipment => {
+                    const equipmentRef = ref(db, 'equipment/' + equipment.id); // Assuming each equipment item has a unique 'id'
+                    updates[equipment.id] = { ...equipment, ...data };
+                });
+
+                await update(ref(db), updates);
+                alert('Equipment updated successfully');
+                window.location.href = 'index.html'; // Redirect back to the main page
+            } catch (error) {
+                console.error('Error updating equipment:', error);
+                alert('Failed to update equipment. Please try again.');
+            }
+        });
+
+        function getFirebaseConfig() {
+            const config = localStorage.getItem('firebaseConfig');
+            if (config) {
+                return JSON.parse(config);
+            } else {
+                throw new Error('Firebase config not found');
+            }
+        }
+    </script>
 </body>
 </html>
