@@ -22,6 +22,9 @@
 
                 <label for="sapNo">SAP No:</label>
                 <input type="text" id="sapNo" name="sapNo" required><br>
+
+                <label for="equipmentType">Equipment Type:</label>
+                <input type="text" id="equipmentType" name="equipmentType" required><br>
             </fieldset>
 
             <fieldset>
@@ -111,9 +114,41 @@
         <button onclick="window.history.back()">Go Back</button>
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+    <script>
+        function updateImagePreview() {
+            const imageLink = document.getElementById('imageLink').value;
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageLink;
+        }
+
+        document.getElementById('addEquipmentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            addEquipment(data);
+        });
+
+        async function addEquipment(data) {
+            const firebaseConfig = getFirebaseConfig();
+            const app = initializeApp(firebaseConfig);
+            const db = getDatabase(app);
+            const equipmentRef = ref(db, 'equipment/');
+            
+            try {
+                const newEquipmentRef = push(equipmentRef);
+                await set(newEquipmentRef, data);
+                alert('Equipment added successfully');
+                window.location.href = 'index.html'; // Redirect back to the main page
+            } catch (error) {
+                console.error('Error adding equipment:', error);
+                alert('Failed to add equipment. Please try again.');
+            }
+        }
 
         function getFirebaseConfig() {
             const config = localStorage.getItem('firebaseConfig');
@@ -123,36 +158,9 @@
                 throw new Error('Firebase config not found');
             }
         }
-
-        const firebaseConfig = getFirebaseConfig();
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        document.getElementById('addEquipmentForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            try {
-                const newEquipmentRef = push(ref(db, 'equipment'));
-                await set(newEquipmentRef, data);
-                alert('Equipment added successfully');
-                window.location.href = 'index.html'; // Redirect back to the main page
-            } catch (error) {
-                console.error('Error adding equipment:', error);
-                alert('Failed to add equipment. Please try again.');
-            }
-        });
-
-        window.updateImagePreview = function() {
-            const imageLink = document.getElementById('imageLink').value;
-            const imagePreview = document.getElementById('imagePreview');
-            imagePreview.src = imageLink;
-        }
     </script>
+
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 </body>
 </html>
