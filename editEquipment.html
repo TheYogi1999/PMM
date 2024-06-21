@@ -63,4 +63,155 @@
                 <input type="date" id="handoverDate" name="handoverDate"><br>
 
                 <label for="returnDate">Return date:</label>
-                <input type="date" id
+                <input type="date" id="returnDate" name="returnDate"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Storage Information</legend>
+                <label for="warehouse">Warehouse:</label>
+                <input type="text" id="warehouse" name="warehouse"><br>
+
+                <label for="storageLocation">Storage location:</label>
+                <input type="text" id="storageLocation" name="storageLocation"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Status Information</legend>
+                <label for="calibrationStatus">Calibration status:</label>
+                <input type="text" id="calibrationStatus" name="calibrationStatus"><br>
+
+                <label for="utilizationStatus">Utilization status:</label>
+                <input type="text" id="utilizationStatus" name="utilizationStatus"><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Additional Information</legend>
+                <label for="batteryType">Battery type:</label>
+                <input type="text" id="batteryType" name="batteryType"><br>
+
+                <label for="weight">Weight (Kg):</label>
+                <input type="text" id="weight" name="weight"><br>
+
+                <label for="imageLink">Image link:</label>
+                <input type="text" id="imageLink" name="imageLink"><br>
+
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment"></textarea><br>
+            </fieldset>
+
+            <button type="submit">Submit Changes</button>
+        </form>
+        <table id="selectedEquipmentTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Equipment no.</th>
+                    <th>Serial No.</th>
+                    <th>Equipment Type</th>
+                    <th>Model No.</th>
+                    <th>Manufacturer</th>
+                    <th>SAP No</th>
+                    <th>Customs No.</th>
+                    <th>Origin</th>
+                    <th>Battery type</th>
+                    <th>Weight (Kg)</th>
+                    <th>Image link</th>
+                    <th>Calibrated on</th>
+                    <th>Cycle duration</th>
+                    <th>Calibration due on</th>
+                    <th>Handover date</th>
+                    <th>Handover to</th>
+                    <th>Location</th>
+                    <th>Return date</th>
+                    <th>Warehouse</th>
+                    <th>Storage location</th>
+                    <th>Calibration status</th>
+                    <th>Utilization status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody id="selectedEquipmentTableBody">
+                <!-- Dynamically filled with JavaScript -->
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <button onclick="window.history.back()">Go Back</button>
+    </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+        const firebaseConfig = getFirebaseConfig();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
+        const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
+
+        selectedEquipment.forEach(equipment => {
+            const row = document.createElement('tr');
+
+            const attributes = [
+                'id', 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
+                'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
+                'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
+                'storageLocation', 'calibrationStatus', 'utilizationStatus', 'comment'
+            ];
+
+            attributes.forEach(attr => {
+                const cell = document.createElement('td');
+                cell.textContent = equipment[attr] || '';
+                row.appendChild(cell);
+            });
+
+            row.dataset.id = equipment.id; // Store the equipment ID in the row dataset
+            selectedEquipmentTableBody.appendChild(row);
+        });
+
+        document.getElementById('editEquipmentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (value) {
+                    data[key] = value;
+                }
+            });
+
+            if (Object.keys(data).length === 0) {
+                alert('No changes detected.');
+                return;
+            }
+
+            try {
+                const updates = {};
+                selectedEquipment.forEach(equipment => {
+                    const equipmentId = equipment.id;
+                    const equipmentRef = ref(db, 'equipment/' + equipmentId);
+                    const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
+                    updates[equipmentRef.key] = updatedData;
+                });
+
+                await update(ref(db), updates);
+                alert('Equipment updated successfully');
+                window.location.href = 'index.html'; // Redirect back to the main page
+            } catch (error) {
+                console.error('Error updating equipment:', error);
+                alert('Failed to update equipment. Please try again.');
+            }
+        });
+
+        function getFirebaseConfig() {
+            const config = localStorage.getItem('firebaseConfig');
+            if (config) {
+                return JSON.parse(config);
+            } else {
+                throw new Error('Firebase config not found');
+            }
+        }
+    </script>
+</body>
+</html>
