@@ -148,7 +148,7 @@
         const selectedEquipment = JSON.parse(localStorage.getItem('selectedEquipment'));
         const selectedEquipmentTableBody = document.getElementById('selectedEquipmentTableBody');
 
-        selectedEquipment.forEach((equipment, index) => {
+        selectedEquipment.forEach(equipment => {
             const row = document.createElement('tr');
 
             const attributes = [
@@ -165,7 +165,7 @@
                 row.appendChild(cell);
             });
 
-            row.dataset.index = index;
+            row.dataset.id = equipment.id; // Store the equipment ID in the row dataset
             selectedEquipmentTableBody.appendChild(row);
         });
 
@@ -188,8 +188,9 @@
             try {
                 const updates = {};
                 selectedEquipment.forEach(equipment => {
-                    const equipmentRef = ref(db, 'equipment/' + equipment.id); // Assuming each equipment item has a unique 'id'
-                    updates[equipment.id] = { ...equipment, ...data };
+                    const equipmentId = equipment.id;
+                    const equipmentRef = ref(db, 'equipment/' + equipmentId);
+                    updates[equipmentId] = { ...equipment, ...data };
                 });
 
                 await update(ref(db), updates);
