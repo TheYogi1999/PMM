@@ -15,82 +15,82 @@
             <fieldset>
                 <legend>Basic Information</legend>
                 <label for="equipmentNo">Equipment no.:</label>
-                <input type="text" id="equipmentNo" name="equipmentNo"><br>
+                <input type="text" id="equipmentNo" name="equipmentNo" required><br>
 
                 <label for="serialNo">Serial No.:</label>
-                <input type="text" id="serialNo" name="serialNo"><br>
+                <input type="text" id="serialNo" name="serialNo" required><br>
 
                 <label for="sapNo">SAP No:</label>
-                <input type="text" id="sapNo" name="sapNo"><br>
+                <input type="text" id="sapNo" name="sapNo" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Model Information</legend>
                 <label for="modelNo">Model No.:</label>
-                <input type="text" id="modelNo" name="modelNo"><br>
+                <input type="text" id="modelNo" name="modelNo" required><br>
 
                 <label for="manufacturer">Manufacturer:</label>
-                <input type="text" id="manufacturer" name="manufacturer"><br>
+                <input type="text" id="manufacturer" name="manufacturer" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Customs Information</legend>
                 <label for="customsNo">Customs No.:</label>
-                <input type="text" id="customsNo" name="customsNo"><br>
+                <input type="text" id="customsNo" name="customsNo" required><br>
 
                 <label for="origin">Origin:</label>
-                <input type="text" id="origin" name="origin"><br>
+                <input type="text" id="origin" name="origin" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Calibration Information</legend>
                 <label for="calibratedOn">Calibrated on:</label>
-                <input type="date" id="calibratedOn" name="calibratedOn"><br>
+                <input type="date" id="calibratedOn" name="calibratedOn" required><br>
 
                 <label for="cycleDuration">Cycle duration:</label>
-                <input type="text" id="cycleDuration" name="cycleDuration"><br>
+                <input type="text" id="cycleDuration" name="cycleDuration" required><br>
 
                 <label for="calibrationDueOn">Calibration due on:</label>
-                <input type="date" id="calibrationDueOn" name="calibrationDueOn"><br>
+                <input type="date" id="calibrationDueOn" name="calibrationDueOn" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Handover Information</legend>
                 <label for="handoverTo">Handover to:</label>
-                <input type="text" id="handoverTo" name="handoverTo"><br>
+                <input type="text" id="handoverTo" name="handoverTo" required><br>
 
                 <label for="handoverDate">Handover date:</label>
-                <input type="date" id="handoverDate" name="handoverDate"><br>
+                <input type="date" id="handoverDate" name="handoverDate" required><br>
 
                 <label for="returnDate">Return date:</label>
-                <input type="date" id="returnDate" name="returnDate"><br>
+                <input type="date" id="returnDate" name="returnDate" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Storage Information</legend>
                 <label for="warehouse">Warehouse:</label>
-                <input type="text" id="warehouse" name="warehouse"><br>
+                <input type="text" id="warehouse" name="warehouse" required><br>
 
                 <label for="storageLocation">Storage location:</label>
-                <input type="text" id="storageLocation" name="storageLocation"><br>
+                <input type="text" id="storageLocation" name="storageLocation" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Status Information</legend>
                 <label for="calibrationStatus">Calibration status:</label>
-                <input type="text" id="calibrationStatus" name="calibrationStatus"><br>
+                <input type="text" id="calibrationStatus" name="calibrationStatus" required><br>
 
                 <label for="utilizationStatus">Utilization status:</label>
-                <input type="text" id="utilizationStatus" name="utilizationStatus"><br>
+                <input type="text" id="utilizationStatus" name="utilizationStatus" required><br>
             </fieldset>
 
             <fieldset>
                 <legend>Additional Information</legend>
                 <label for="batteryType">Battery type:</label>
-                <input type="text" id="batteryType" name="batteryType"><br>
+                <input type="text" id="batteryType" name="batteryType" required><br>
 
                 <label for="weight">Weight (Kg):</label>
-                <input type="text" id="weight" name="weight"><br>
+                <input type="text" id="weight" name="weight" required><br>
 
                 <label for="imageLink">Image link:</label>
                 <input type="text" id="imageLink" name="imageLink" oninput="updateImagePreview()"><br>
@@ -111,41 +111,9 @@
         <button onclick="window.history.back()">Go Back</button>
     </footer>
 
-    <script>
-        function updateImagePreview() {
-            const imageLink = document.getElementById('imageLink').value;
-            const imagePreview = document.getElementById('imagePreview');
-            imagePreview.src = imageLink;
-        }
-
-        document.getElementById('addEquipmentForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            addEquipment(data);
-        });
-
-        async function addEquipment(data) {
-            const firebaseConfig = getFirebaseConfig();
-            const app = initializeApp(firebaseConfig);
-            const db = getDatabase(app);
-            const equipmentRef = ref(db, 'equipment/');
-            
-            try {
-                const newEquipmentRef = push(equipmentRef);
-                await set(newEquipmentRef, data);
-                alert('Equipment added successfully');
-                window.location.href = 'index.html'; // Redirect back to the main page
-            } catch (error) {
-                console.error('Error adding equipment:', error);
-                alert('Failed to add equipment. Please try again.');
-            }
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
         function getFirebaseConfig() {
             const config = localStorage.getItem('firebaseConfig');
@@ -155,9 +123,36 @@
                 throw new Error('Firebase config not found');
             }
         }
-    </script>
 
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+        const firebaseConfig = getFirebaseConfig();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('addEquipmentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                const newEquipmentRef = push(ref(db, 'equipment'));
+                await set(newEquipmentRef, data);
+                alert('Equipment added successfully');
+                window.location.href = 'index.html'; // Redirect back to the main page
+            } catch (error) {
+                console.error('Error adding equipment:', error);
+                alert('Failed to add equipment. Please try again.');
+            }
+        });
+
+        window.updateImagePreview = function() {
+            const imageLink = document.getElementById('imageLink').value;
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageLink;
+        }
+    </script>
 </body>
 </html>
