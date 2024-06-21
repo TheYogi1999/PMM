@@ -31,6 +31,9 @@ export function fetchData() {
             const data = childSnapshot.val();
             const row = document.createElement('tr');
             
+            // Including the ID in the data object
+            data.id = childSnapshot.key;
+
             const attributes = [
                 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
                 'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
@@ -46,28 +49,20 @@ export function fetchData() {
                 cell.textContent = data[attr] || ''; // Fallback to empty string if the attribute is missing
                 row.appendChild(cell);
             });
-            
+
+            row.addEventListener('click', function() {
+                if (selectedRows.includes(row)) {
+                    row.classList.remove('selected');
+                    selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
+                } else {
+                    row.classList.add('selected');
+                    selectedRows.push(row);
+                }
+            });
+
             equipmentTableBody.appendChild(row);
         });
-        addRowEventListeners();
     });
-}
-
-// Function to add event listeners to table rows for selection
-function addRowEventListeners() {
-    const rows = equipmentTableBody.getElementsByTagName('tr');
-    
-    for (const row of rows) {
-        row.addEventListener('click', function() {
-            if (selectedRows.includes(row)) {
-                row.classList.remove('selected');
-                selectedRows = selectedRows.filter(selectedRow => selectedRow !== row);
-            } else {
-                row.classList.add('selected');
-                selectedRows.push(row);
-            }
-        });
-    }
 }
 
 editEquipmentBtn.addEventListener('click', () => {
