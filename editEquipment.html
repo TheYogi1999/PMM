@@ -8,104 +8,46 @@
 </head>
 <body>
     <header>
-        <h1>Edit Equipment</h1>
+        <h1>Edit Selected Equipment</h1>
     </header>
     <main>
-        <div id="selectedEquipment">
-            <!-- Selected equipment will be displayed here -->
-        </div>
-        <form id="editForm">
-            <div>
-                <label for="serialNo">Serial No.</label>
-                <input type="text" id="serialNo" name="serialNo">
-            </div>
-            <div>
-                <label for="equipmentType">Equipment Type</label>
-                <input type="text" id="equipmentType" name="equipmentType">
-            </div>
-            <div>
-                <label for="modelNo">Model No.</label>
-                <input type="text" id="modelNo" name="modelNo">
-            </div>
-            <div>
-                <label for="manufacturer">Manufacturer</label>
-                <input type="text" id="manufacturer" name="manufacturer">
-            </div>
-            <div>
-                <label for="sapNo">SAP No</label>
-                <input type="text" id="sapNo" name="sapNo">
-            </div>
-            <div>
-                <label for="customsNo">Customs No.</label>
-                <input type="text" id="customsNo" name="customsNo">
-            </div>
-            <div>
-                <label for="origin">Origin</label>
-                <input type="text" id="origin" name="origin">
-            </div>
-            <div>
-                <label for="batteryType">Battery type</label>
-                <input type="text" id="batteryType" name="batteryType">
-            </div>
-            <div>
-                <label for="weight">Weight (Kg)</label>
-                <input type="text" id="weight" name="weight">
-            </div>
-            <div>
-                <label for="imageLink">Image link</label>
-                <input type="text" id="imageLink" name="imageLink">
-            </div>
-            <div>
-                <label for="calibratedOn">Calibrated on</label>
-                <input type="date" id="calibratedOn" name="calibratedOn">
-            </div>
-            <div>
-                <label for="cycleDuration">Cycle duration</label>
-                <input type="text" id="cycleDuration" name="cycleDuration">
-            </div>
-            <div>
-                <label for="calibrationDueOn">Calibration due on</label>
-                <input type="date" id="calibrationDueOn" name="calibrationDueOn">
-            </div>
-            <div>
-                <label for="handoverDate">Handover date</label>
-                <input type="date" id="handoverDate" name="handoverDate">
-            </div>
-            <div>
-                <label for="handoverTo">Handover to</label>
-                <input type="text" id="handoverTo" name="handoverTo">
-            </div>
-            <div>
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location">
-            </div>
-            <div>
-                <label for="returnDate">Return date</label>
-                <input type="date" id="returnDate" name="returnDate">
-            </div>
-            <div>
-                <label for="warehouse">Warehouse</label>
-                <input type="text" id="warehouse" name="warehouse">
-            </div>
-            <div>
-                <label for="storageLocation">Storage location</label>
-                <input type="text" id="storageLocation" name="storageLocation">
-            </div>
-            <div>
-                <label for="calibrationStatus">Calibration status</label>
-                <input type="text" id="calibrationStatus" name="calibrationStatus">
-            </div>
-            <div>
-                <label for="utilizationStatus">Utilization status</label>
-                <input type="text" id="utilizationStatus" name="utilizationStatus">
-            </div>
-            <div>
-                <label for="comment">Comment</label>
-                <textarea id="comment" name="comment"></textarea>
-            </div>
-            <button type="submit">Save Changes</button>
-        </form>
+        <table id="selectedEquipmentTable">
+            <thead>
+                <tr>
+                    <th>Equipment no.</th>
+                    <th>Serial No.</th>
+                    <th>Equipment Type</th>
+                    <th>Model No.</th>
+                    <th>Manufacturer</th>
+                    <th>SAP No</th>
+                    <th>Customs No.</th>
+                    <th>Origin</th>
+                    <th>Battery type</th>
+                    <th>Weight (Kg)</th>
+                    <th>Image link</th>
+                    <th>Calibrated on</th>
+                    <th>Cycle duration</th>
+                    <th>Calibration due on</th>
+                    <th>Handover date</th>
+                    <th>Handover to</th>
+                    <th>Location</th>
+                    <th>Return date</th>
+                    <th>Warehouse</th>
+                    <th>Storage location</th>
+                    <th>Calibration status</th>
+                    <th>Utilization status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody id="selectedEquipmentTableBody">
+                <!-- Dynamically filled with JavaScript -->
+            </tbody>
+        </table>
     </main>
-    <script src="editEquipment.js"></script>
+    <footer>
+        <button onclick="window.history.back()">Go Back</button>
+    </footer>
+
+    <script type="module" src="editEquipment.js"></script>
 </body>
 </html>
