@@ -104,6 +104,7 @@
         <table id="selectedEquipmentTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Equipment no.</th>
                     <th>Serial No.</th>
                     <th>Equipment Type</th>
@@ -152,7 +153,7 @@
             const row = document.createElement('tr');
 
             const attributes = [
-                'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
+                'id', 'equipmentNo', 'serialNo', 'equipmentType', 'modelNo', 'manufacturer', 
                 'sapNo', 'customsNo', 'origin', 'batteryType', 'weight', 
                 'imageLink', 'calibratedOn', 'cycleDuration', 'calibrationDueOn', 
                 'handoverDate', 'handoverTo', 'location', 'returnDate', 'warehouse', 
@@ -191,7 +192,7 @@
                     const equipmentId = equipment.id;
                     const equipmentRef = ref(db, 'equipment/' + equipmentId);
                     const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
-                    updates[equipmentRef.key] = updatedData;
+                    updates['equipment/' + equipmentId] = updatedData;
                 });
 
                 await update(ref(db), updates);
