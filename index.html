@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messmittelverwaltung</title>
+    <title>Equipment Management</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Messmittelverwaltung</h1>
-        <div class="controls">
-            <button id="addEquipmentBtn">Add Equipment</button>
-            <button id="editEquipmentBtn">Edit Equipment</button>
-            <button id="checkOutBtn">Check out</button>
-            <button id="calibrationBtn">Calibration</button>
-            <button id="overviewMapBtn">Overview map</button>
-            <button id="logBtn">Log</button>
-            <button id="settingsBtn">Settings</button>
-        </div>
+        <h1>Equipment Management</h1>
     </header>
     <main>
         <input type="text" id="searchField" placeholder="Search...">
-        <table id="equipmentTable">
+        <button id="editEquipmentBtn">Edit Equipment</button>
+        <button id="checkOutBtn">Check Out</button>
+        <button id="calibrateBtn">Calibration</button>
+        <table>
             <thead>
                 <tr>
                     <th>Equipment no.</th>
@@ -55,14 +49,8 @@
         </table>
     </main>
     <footer>
-        <div id="selectedEquipmentDetails">
-            <!-- Details of selected equipment will appear here -->
-        </div>
-        <img id="selectedEquipmentImage" src="" alt="Equipment Image">
+        <button onclick="window.location.href='addEquipment.html'">Add Equipment</button>
     </footer>
-
-    <script type="module" src="index.js"></script>
-    <script type="module" src="colorScript.js"></script>
-    <script type="module" src="buttonHandlers.js"></script>
+    <script src="index.js" type="module"></script>
 </body>
 </html>
