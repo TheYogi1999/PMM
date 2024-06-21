@@ -190,7 +190,8 @@
                 selectedEquipment.forEach(equipment => {
                     const equipmentId = equipment.id;
                     const equipmentRef = ref(db, 'equipment/' + equipmentId);
-                    updates[equipmentId] = { ...equipment, ...data };
+                    const updatedData = { ...equipment, ...data }; // Merge existing data with the new data
+                    updates[equipmentRef.key] = updatedData;
                 });
 
                 await update(ref(db), updates);
