@@ -18,6 +18,7 @@ const db = getDatabase(app);
 
 const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
+const editEquipmentBtn = document.getElementById('editEquipmentBtn');
 const checkOutBtn = document.getElementById('checkOutBtn');
 
 let selectedRows = [];
@@ -64,6 +65,12 @@ export function fetchData() {
         });
     });
 }
+
+editEquipmentBtn.addEventListener('click', () => {
+    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
+    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
+    window.location.href = 'editEquipment.html';
+});
 
 checkOutBtn.addEventListener('click', () => {
     const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
