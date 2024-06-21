@@ -107,3 +107,4 @@ searchField.addEventListener('input', () => {
 
 // Initial data fetch
 fetchData();
+
