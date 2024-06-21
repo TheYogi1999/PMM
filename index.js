@@ -20,7 +20,6 @@ const equipmentTableBody = document.getElementById('equipmentTableBody');
 const searchField = document.getElementById('searchField');
 const editEquipmentBtn = document.getElementById('editEquipmentBtn');
 const checkOutBtn = document.getElementById('checkOutBtn');
-const calibrateBtn = document.getElementById('calibrateBtn'); // Add button for Calibration
 
 let selectedRows = [];
 
@@ -77,12 +76,6 @@ checkOutBtn.addEventListener('click', () => {
     const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
     localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
     window.location.href = 'checkOut.html';
-});
-
-calibrateBtn.addEventListener('click', () => { // Add event listener for Calibration
-    const selectedEquipment = selectedRows.map(row => JSON.parse(row.dataset.equipment));
-    localStorage.setItem('selectedEquipment', JSON.stringify(selectedEquipment));
-    window.location.href = 'calibration.html';
 });
 
 // Filter table based on search input
