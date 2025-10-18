@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prüfmittel‑Manager (Web)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>Prüfmittel‑Manager</h1>
+        <p class="subtitle">100% HTML/CSS/JS • GitHub Pages</p>
+      </div>
+    </div>
+    <div class="actions">
+      <label class="file">
+        <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
+        <span>Excel/CSV importieren</span>
+      </label>
+      <button id="exportBtn" class="btn">Export als Excel</button>
+      <button id="cloudBtn" class="btn outline">Cloud</button>
+      <button id="clearBtn" class="btn ghost">Daten löschen</button>
+      <a id="demoBtn" class="btn outline" href="#" title="Lädt Demo-Daten">Demo laden</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel controls">
+      <div class="row wrap">
+        <div class="left">
+          <label class="checkbox">
+            <input type="checkbox" id="selectAll" />
+            <span>Alle auswählen</span>
+          </label>
+          <span id="selectionCount" class="muted">0 ausgewählt</span>
+        </div>
+        <div class="search">
+          <input id="searchInput" type="search" placeholder="Suchen (beliebige Spalte) …" />
+        </div>
+        <div class="view">
+          <label>Zeilen: <select id="pageSize">
+            <option>20</option>
+            <option selected>50</option>
+            <option>100</option>
+            <option>200</option>
+            <option>500</option>
+            <option>1000</option>
+            <option>Alle</option>
+          </select></label>
+          <label class="toggle">
+            <input type="checkbox" id="fitToggle" checked>
+            <span>Auto-Breite</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="hideEmptyToggle" checked>
+            <span>Leere Zeilen ausblenden</span>
+          </label>
+          <button id="clearFiltersBtn" class="btn ghost" title="Alle Spaltenfilter leeren">Filter löschen</button>
+        </div>
+      </div>
+
+      <div class="row wrap">
+        <details class="loans">
+          <summary>Ausleihe / Rückgabe</summary>
+          <div class="loan-grid">
+            <div>
+              <label>Entleiher (Name/Abteilung)</label>
+              <input id="loanWho" type="text" placeholder="z. B. A. Meier / Fertigung" />
+            </div>
+            <div class="loan-actions">
+              <button id="loanBtn" class="btn primary">Ausleihen</button>
+              <button id="returnBtn" class="btn">Zurückgeben</button>
+            </div>
+            <div class="muted small">
+              Setzt <code>loan_status</code>, <code>loaned_to</code>, <code>loan_date</code> bzw. <code>return_date</code> für alle markierten Zeilen.
+            </div>
+          </div>
+        </details>
+
+        <details class="calib">
+          <summary>Kalibrierung</summary>
+          <div class="calib-grid">
+            <div>
+              <label>Kalibrierdienst / Auftrag</label>
+              <input id="calProv" type="text" placeholder="z. B. SGS / Auftrag 4711" />
+            </div>
+            <div>
+              <label>Kalibrierintervall (Monate)</label>
+              <input id="calInterval" type="number" min="1" step="1" placeholder="z. B. 12" />
+              <div class="muted small">Falls nicht angegeben, wird versucht das Intervall aus der Tabelle zu lesen, sonst 12 Monate.</div>
+            </div>
+            <div class="cal-actions">
+              <button id="calSendBtn" class="btn primary">Zur Kalibrierung senden</button>
+              <button id="calBackBtn" class="btn">Von Kalibrierung zurück</button>
+            </div>
+            <div class="muted small">
+              Aktualisiert <code>cal_status</code>, <code>freigabe/status</code>, <code>Letzte Durchführung</code>, <code>Nächster Termin (Primär)</code>.
+            </div>
+          </div>
+        </details>
+
+        <details class="crud">
+          <summary>Datensätze</summary>
+          <div class="loan-grid">
+            <div class="muted small">Fügt ein neues Messmittel per Formular hinzu oder löscht markierte Zeilen.</div>
+            <div class="loan-actions">
+              <button id="addRowBtn" class="btn">Messmittel hinzufügen</button>
+              <button id="deleteRowsBtn" class="btn danger">Ausgewählte löschen</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel table-wrap">
+      <div id="tableContainer"></div>
+      <div class="pager">
+        <button id="prevPage" class="btn">&laquo;</button>
+        <span id="pageInfo" class="muted"></span>
+        <button id="nextPage" class="btn">&raquo;</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Lokale Speicherung: <span id="storageState" class="muted">prüfe…</span></span>
+    <a href="README.html" target="_blank">Anleitung</a>
+  </footer>
+
+  <!-- Modal: Add single device -->
+  <div id="modalBackdrop" class="modal-backdrop" hidden></div>
+  <div id="addModal" class="modal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-head">
+      <h2>Neues Messmittel</h2>
+      <button id="modalClose" class="btn ghost">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="addForm" class="form-grid"></form>
+      <p class="muted small">Pflicht: <code>instrument_no</code> oder <code>designation</code> (falls vorhanden). <br>Hinweis: <code>instrument_no</code> muss eindeutig sein.</p>
+    </div>
+    <div class="modal-foot">
+      <button id="modalSave" class="btn primary">Speichern</button>
+      <button id="modalCancel" class="btn ghost">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Import-Assistent -->
+  <div id="importModal" class="modal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-head">
+      <h2>Import-Assistent</h2>
+      <button id="impClose" class="btn ghost">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div>
+          <label>Arbeitsblatt</label>
+          <select id="sheetSelect"></select>
+        </div>
+        <div>
+          <label>Header-Zeile</label>
+          <input id="headerRow" type="number" min="1" value="1" />
+        </div>
+      </div>
+      <div class="muted small">Wähle das Blatt und die Zeile mit den Spaltenüberschriften. Unten siehst du eine Vorschau.</div>
+      <pre id="impPreview" class="preview"></pre>
+    </div>
+    <div class="modal-foot">
+      <button id="impApply" class="btn primary">Übernehmen</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+  <div id="cloudBackdrop" class="backdrop" hidden></div>
+  <div id="cloudModal" class="modal" hidden>
+    <div class="modal-head">
+      <h2>Cloud‑Speicher (Firebase)</h2>
+      <button id="cloudClose" class="btn ghost">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div>
+          <label>Konfiguration (JSON)</label>
+          <textarea id="fbConfigJson" rows="8" placeholder='{"apiKey":"","authDomain":"","databaseURL":"","projectId":"","storageBucket":"","messagingSenderId":"","appId":""}'></textarea>
+          <p class="small muted">Wird lokal gespeichert. Nutzt <code>Realtime Database</code> (<code>databaseURL</code>).</p>
+        </div>
+        <div>
+          <label>Pfad</label>
+          <input id="fbPath" type="text" placeholder="/pmm/data" />
+          <p class="small muted">Mehrere Benutzer können denselben Pfad teilen.</p>
+        </div>
+      </div>
+      <div class="muted small" id="cloudStatus">Status: —</div>
+    </div>
+    <div class="modal-foot">
+      <button id="cloudTest" class="btn">Verbindung testen</button>
+      <button id="cloudUse" class="btn primary">Cloud verwenden</button>
+      <button id="cloudDisable" class="btn outline">Nur lokal</button>
+    </div>
+  </div>
+</body>
+</html>
